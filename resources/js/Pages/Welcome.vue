@@ -23,7 +23,7 @@ const page = usePage()
 
 onMounted(() => {
     if (page.props.auth.user) {
-        router.visit(route('dashboard')) // Redireciona para o dashboard
+        router.visit(route('dashboard'))
     }
 })
 </script>
