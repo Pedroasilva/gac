@@ -12,8 +12,8 @@ Este projeto utiliza Laravel com Sail e Inertia.js para criar uma aplicação we
 1. Clone o repositório:
 
     ```bash
-    git clone https://github.com/seu-usuario/seu-repositorio.git
-    cd seu-repositorio
+    git clone https://github.com/Pedroasilva/gac.git
+    cd gac
     ```
 
 2. Copie o arquivo `.env.example` para `.env` e configure suas variáveis de ambiente:
@@ -46,12 +46,18 @@ Este projeto utiliza Laravel com Sail e Inertia.js para criar uma aplicação we
     ./vendor/bin/sail artisan migrate
     ```
 
+7. Instale as dependências do NPM:
+
+    ```bash
+    ./vendor/bin/sail npm install
+    ```
+
 ## Uso
 
 Para iniciar o servidor de desenvolvimento, utilize o comando:
 
 ```bash
-./vendor/bin/sail up
+./vendor/bin/sail npm run dev
 ```
 
 A aplicação estará disponível em [http://localhost:8000](http://localhost:8000).
