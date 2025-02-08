@@ -1,6 +1,7 @@
-# Projeto Laravel com Sail e Inertia
+# Desafio para full stack Grupo Adriano Cobuccio
 
-Este projeto utiliza [Laravel 11.41.3](https://laravel.com/docs/11.x) com Sail e Inertia.js para criar uma aplicação web moderna e eficiente.
+O objetivo consiste na criação de uma interface funcional equivalente a uma carteira financeira em
+que os usuários possam realizar transferência de saldo e depósito.
 
 ## Tecnologias Utilizadas
 
