@@ -69,6 +69,21 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
+            <div>
+                <InputLabel for="pix" value="Pix Key" />
+
+                <TextInput
+                    id="pix"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.pix"
+                    required
+                    autocomplete="pix"
+                />
+
+                <InputError class="mt-2" :message="form.errors.pix" />
+            </div>
+
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
                 <p class="mt-2 text-sm text-gray-800">
                     Your email address is unverified.
