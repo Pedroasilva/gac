@@ -1,6 +1,17 @@
 # Projeto Laravel com Sail e Inertia
 
-Este projeto utiliza Laravel com Sail e Inertia.js para criar uma aplicação web moderna e eficiente.
+Este projeto utiliza [Laravel 11.41.3](https://laravel.com/docs/11.x) com Sail e Inertia.js para criar uma aplicação web moderna e eficiente.
+
+## Tecnologias Utilizadas
+
+- [Laravel v11.41.3](https://laravel.com/docs/11.x)
+- [PHP 8.4.3](https://www.php.net/releases/8.4/pt_BR.php)
+- [VueJs 3](https://v3.vuejs.org/)
+- [Inertia.js](https://inertiajs.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [MySQL](https://www.mysql.com/)
 
 ## Requisitos
 
