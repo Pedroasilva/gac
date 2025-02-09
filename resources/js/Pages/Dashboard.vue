@@ -5,14 +5,7 @@ import Transaction from '@/Components/Transaction.vue';
 import TransferForm from './Partials/TransferForm.vue';
 import DepositForm from './Partials/DepositForm.vue';
 
-usePoll(2000, {
-  onStart() {
-      console.log('Polling request started')
-  },
-  onFinish() {
-      console.log('Polling request finished')
-  }
-})
+usePoll(2000);
 
 defineProps({
     bankAccount: {
