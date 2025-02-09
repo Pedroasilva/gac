@@ -14,18 +14,18 @@ const props = defineProps({
 });
 
 const showReceipt = ref(false);
-const transaction = ref(null);
+const response = ref(null);
 
 const show = () => {
     showReceipt.value = true;
+    response.value = null;
     getReceipt();
 };
 
 const getReceipt = () => {
     axios.get('/receipt?group=' + props.group)
-        .then(response => {
-            console.log(response.data); // A resposta JSON
-            transaction.value = response.data;
+        .then(jsonResponse => {
+            response.value = jsonResponse.data;
         })
         .catch(error => {
             console.error('Erro na requisição:', error);
@@ -53,42 +53,40 @@ const closeModal = () => {
 
         <Modal :show="showReceipt" @close="closeModal">
             <div class="bg-gray-100 p-6">
-                <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6" v-if="transaction">
+                <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6" v-if="response">
                     <div class="text-center mb-6">
                         <h1 class="text-2xl font-bold">Receipt</h1>
-                        <p class="text-sm text-gray-500">Transaction ID: #{{ transaction.id }}</p>
-                        <p class="text-sm text-gray-500">Date: {{ transaction.date }}</p>
+                        <p class="text-sm text-gray-500">Transaction ID: #{{ response.transactions.transaction_group }}</p>
+                        <p class="text-sm text-gray-500">Date: {{ response.transactions.created_at }}</p>
                     </div>
 
                     <div class="mb-6">
-                        <h2 class="text-lg font-semibold mb-2">Merchant</h2>
+                        <h2 class="text-lg font-semibold mb-2">Wallet Code</h2>
                         <div class="bg-gray-200 p-4 rounded-lg">
-                            <p class="text-lg">{{ transaction.merchant }}</p>
+                            <p class="text-lg">{{ response.bankAccount.wallet_code }}</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <h2 class="text-lg font-semibold">Amount</h2>
-                            <p class="text-xl">{{ formatCurrency(transaction.amount) }}</p>
+                            <p class="text-xl">{{ formatCurrency(response.transactions.amount) }}</p>
                         </div>
                         <div class="bg-gray-200 p-4 rounded-lg">
-                            <h2 class="text-lg font-semibold">Payment Method</h2>
-                            <p class="text-xl">{{ transaction.paymentMethod }}</p>
+                            <h2 class="text-lg font-semibold">Type</h2>
+                            <p class="text-xl">{{ response.transactions.transaction_type === 'in' ? 'Income' : 'Expense' }}</p>
                         </div>
                     </div>
 
-                    <div class="mb-6">
-                        <h2 class="text-lg font-semibold mb-2">Details</h2>
+                    <div>
+                        <h2 class="text-lg font-semibold mb-2">Description</h2>
                         <div class="bg-gray-200 p-4 rounded-lg">
-                            <p class="text-lg">{{ transaction.details }}</p>
+                            <p class="text-lg">{{ response.transactions.description }}</p>
                         </div>
                     </div>
-
-                    <div class="text-center">
-                        <p class="text-sm text-gray-500">Thank you for your purchase!</p>
-                        <p class="text-sm text-gray-500">Please keep this receipt for your records.</p>
-                    </div>
+                </div>
+                <div v-else class="text-center">
+                    <p class="text-sm text-gray-500">Loading...</p>
                 </div>
                 <div class="flex justify-center mt-6">
                     <SecondaryButton @click="closeModal">

@@ -73,13 +73,15 @@ class DashboardController extends Controller
     public function receipt(ReceiptRequest $request)
     {
         $validated = $request->validated();
-        $bankAccountId = Auth::user()->bankAccount->id;
+        $bankAccount = Auth::user()->bankAccount;
 
-        $transactions = BankAccount::find($bankAccountId)
-            ->transactions()
+        $transactions = $bankAccount->transactions()
             ->where('transaction_group', $validated['group'])
-            ->get();
+            ->first();
 
-        return response()->json($transactions);
+        return response()->json([
+            'bankAccount' => $bankAccount,
+            'transactions' => $transactions,
+        ]);
     }
 }
