@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Transfer\TransferRequest;
 use App\Models\BankAccount;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -21,5 +22,23 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'bankAccount' => $bankAccount,
         ]);
+    }
+
+    public function transfer(TransferRequest $request)
+    {
+        $request = $request->validated();
+        
+        $amount = $request['amount'];
+        $source = Auth::user()->bankAccount;
+        $destination = BankAccount::where('wallet_code', $request['wallet_destination'])->first();
+
+        if ($source->balance < $amount) {
+            return redirect()->back()->with('error', 'Insufficient funds');
+        }
+
+        $source->withdraw($amount);
+        $destination->deposit($amount);
+
+        return redirect()->back()->with('success', 'Transfer successful');
     }
 }

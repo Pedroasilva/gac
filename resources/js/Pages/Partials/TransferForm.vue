@@ -8,30 +8,32 @@ import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 
-const confirmingUserDeletion = ref(false);
-const passwordInput = ref(null);
+const confirmingTransfer = ref(false);
+const wallet_destination_input = ref(null);
+const amount_input = ref(null);
 
 const form = useForm({
-    password: '',
+    wallet_destination: '',
+    amount: '',
 });
 
 const confirmTransfer = () => {
-    confirmingUserDeletion.value = true;
+    confirmingTransfer.value = true;
 
-    nextTick(() => passwordInput.value.focus());
+    nextTick(() => wallet_destination_input.value.focus());
 };
 
-const deleteUser = () => {
-    form.delete(route('profile.destroy'), {
+const transfer = () => {
+    form.post(route('transfer'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
+        onError: () => wallet_destination_input.value.focus(),
         onFinish: () => form.reset(),
     });
 };
 
 const closeModal = () => {
-    confirmingUserDeletion.value = false;
+    confirmingTransfer.value = false;
 
     form.clearErrors();
     form.reset();
@@ -45,7 +47,7 @@ const closeModal = () => {
             Transfer
         </OrangeButton>
 
-        <Modal :show="confirmingUserDeletion" @close="closeModal">
+        <Modal :show="confirmingTransfer" @close="closeModal">
             <div class="p-6">
                 <h2
                     class="text-lg font-medium text-gray-900"
@@ -59,40 +61,42 @@ const closeModal = () => {
 
                 <div class="mt-6">
                     <InputLabel
-                        for="value"
+                        for="wallet_destination"
                         value="Wallet Code"
                         class="sr-only"
                     />
 
                     <TextInput
-                        id="wallet_code"
-                        ref="wallet_code_input"
-                        v-model="form.wallet_code"
+                        id="wallet_destination"
+                        ref="wallet_destination_input"
+                        v-model="form.wallet_destination"
                         type="text"
                         class="mt-1 block w-3/4"
                         placeholder="Wallet Code"
+                        required
                     />
 
-                    <InputError :message="form.errors.wallet_code" class="mt-2" />
+                    <InputError :message="form.errors.wallet_destination" class="mt-2" />
                 </div>
 
                 <div class="mt-6">
                     <InputLabel
-                        for="value"
+                        for="amount"
                         value="Amount"
                         class="sr-only"
                     />
 
                     <TextInput
-                        id="value"
-                        ref="value_input"
-                        v-model="form.value"
+                        id="amount"
+                        ref="amount_input"
+                        v-model="form.amount"
                         type="number"
                         class="mt-1 block w-3/4"
                         placeholder="Amount"
+                        required
                     />
 
-                    <InputError :message="form.errors.value" class="mt-2" />
+                    <InputError :message="form.errors.amount" class="mt-2" />
                 </div>
 
                 <div class="mt-6 flex justify-end">
@@ -104,7 +108,7 @@ const closeModal = () => {
                         class="ms-3"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
-                        @click="deleteUser"
+                        @click="transfer"
                     >
                         Transfer Value
                     </OrangeButton>

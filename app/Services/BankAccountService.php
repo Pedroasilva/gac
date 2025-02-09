@@ -34,7 +34,7 @@ class BankAccountService
     public function withdraw(BankAccount $account, $amount)
     {
         $account->balance -= $amount;
-        $account->expenses -= $amount;
+        $account->expenses += $amount;
         $account->save();
     }
 
