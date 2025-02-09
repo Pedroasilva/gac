@@ -52,7 +52,7 @@ const closeModal = () => {
         </PrimaryButton>
 
         <Modal :show="showReceipt" @close="closeModal">
-            <div class="bg-gray-100 p-6">
+            <div class="bg-gray-100 p-6 relative">
                 <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6" v-if="response">
                     <div class="text-center mb-6">
                         <h1 class="text-2xl font-bold">Receipt</h1>
@@ -87,6 +87,9 @@ const closeModal = () => {
                 </div>
                 <div v-else class="text-center">
                     <p class="text-sm text-gray-500">Loading...</p>
+                </div>
+                <div v-if="response && response.transactions.reversed" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <p class="text-6xl text-red-500 opacity-50 transform rotate-45">REVERSED</p>
                 </div>
                 <div class="flex justify-center mt-6">
                     <SecondaryButton @click="closeModal">

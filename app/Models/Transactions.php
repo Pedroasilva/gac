@@ -12,6 +12,7 @@ class Transactions extends Model
         'amount',
         'description',
         'transaction_group',
+        'reversed',
     ];
 
     public $timestamps = false;

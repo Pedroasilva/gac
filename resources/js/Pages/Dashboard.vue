@@ -60,10 +60,7 @@ const formatCurrency = (value) => {
 
             <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-4">Transactions</h2>
-                <Transaction v-for="transaction in bankAccount.transactions" :key="transaction.id"
-                    :group="transaction.transaction_group" :date="transaction.created_at"
-                    :description="transaction.description" :amount="formatCurrency(transaction.amount)"
-                    :type="transaction.transaction_type" />
+                <Transaction v-for="transaction in bankAccount.transactions" :transaction/>
             </div>
 
             <p v-if="bankAccount.transactions.length === 0" class="text-center text-gray-500">No transactions found
