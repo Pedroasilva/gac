@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Transfer\DepositRequest;
 use App\Http\Requests\Transfer\TransferRequest;
 use App\Models\BankAccount;
-use App\Services\BankAccountService;
+use App\Services\Contracts\BankAccountServiceInterface;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -13,7 +14,7 @@ class DashboardController extends Controller
 {
     protected $bankAccountService;
 
-    public function __construct(BankAccountService $bankAccountService)
+    public function __construct(BankAccountServiceInterface $bankAccountService)
     {
         $this->bankAccountService = $bankAccountService;
     }
@@ -23,6 +24,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $bankAccount = BankAccount::where('user_id', $user->id)
             ->with(['transactions' => function ($query) {
+                $query->orderBy('created_at', 'desc');
                 $query->limit(10);
             }])
             ->first();
@@ -41,15 +43,29 @@ class DashboardController extends Controller
         $destination = BankAccount::where('wallet_code', $validated['wallet_destination'])->first();
 
         if (!$destination) {
-            return redirect()->back()->with('error', 'Destination account not found');
+            return redirect()->back()->withErrors(['wallet_destination' => 'The destination wallet does not exist']);
+        }
+
+        if ($source->wallet_code === $destination->wallet_code) {
+            return redirect()->back()->withErrors(['wallet_destination' => 'You cannot transfer to the same wallet']);
         }
 
         if ($source->balance < $amount) {
-            return redirect()->back()->with('error', 'Insufficient funds');
+            return redirect()->back()->withErrors(['amount' => 'Insufficient funds']);
         }
 
         $this->bankAccountService->transfer($source, $destination, $amount);
 
         return redirect()->back()->with('success', 'Transfer successful');
+    }
+
+    public function deposit(DepositRequest $request)
+    {
+        $validated = $request->validated();
+        $bankAccount = Auth::user()->bankAccount;
+
+        $this->bankAccountService->deposit($bankAccount, $validated['amount']);
+
+        return redirect()->back()->with('success', 'Deposit successful');
     }
 }

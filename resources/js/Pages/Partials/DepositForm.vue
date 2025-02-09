@@ -7,33 +7,32 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
+import GreenButton from '@/Components/GreenButton.vue';
 
-const confirmingTransfer = ref(false);
-const walletDestinationInput = ref(null);
+const confirmingDeposit = ref(false);
 const amount_input = ref(null);
 
 const form = useForm({
-    wallet_destination: '',
     amount: '',
 });
 
-const confirmTransfer = () => {
-    confirmingTransfer.value = true;
+const confirmDeposit = () => {
+    confirmingDeposit.value = true;
 
-    nextTick(() => walletDestinationInput.value.focus());
+    nextTick(() => amount_input.value.focus());
 };
 
-const transfer = () => {
-    form.post(route('transfer.make'), {
+const deposit = () => {
+    form.post(route('deposit.make'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => walletDestinationInput.value.focus(),
+        onError: () => amount_input.value.focus(),
         onFinish: () => form.reset(),
     });
 };
 
 const closeModal = () => {
-    confirmingTransfer.value = false;
+    confirmingDeposit.value = false;
 
     form.clearErrors();
     form.reset();
@@ -42,42 +41,22 @@ const closeModal = () => {
 
 <template>
     <section class="space-y-6">
-        <OrangeButton @click="confirmTransfer">
-            <i class="fa-solid fa-money-bill-transfer"></i>
-            Transfer
-        </OrangeButton>
+        <GreenButton @click="confirmDeposit">
+            <i class="fa-solid fa-landmark"></i>
+            Deposit
+        </GreenButton>
 
-        <Modal :show="confirmingTransfer" @close="closeModal">
+        <Modal :show="confirmingDeposit" @close="closeModal">
             <div class="p-6">
                 <h2
                     class="text-lg font-medium text-gray-900"
                 >
-                    Transfer Value
+                    Deposit Value
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600">
-                    Please enter the wallet code and the amount you wish to transfer.
+                    Please enter the amount you wish to deposit.
                 </p>
-
-                <div class="mt-6">
-                    <InputLabel
-                        for="wallet_destination"
-                        value="Wallet Code"
-                        class="sr-only"
-                    />
-
-                    <TextInput
-                        id="wallet_destination"
-                        ref="walletDestinationInput"
-                        v-model="form.wallet_destination"
-                        type="text"
-                        class="mt-1 block w-3/4"
-                        placeholder="Wallet Code"
-                        required
-                    />
-
-                    <InputError :message="form.errors.wallet_destination" class="mt-2" />
-                </div>
 
                 <div class="mt-6">
                     <InputLabel
@@ -104,14 +83,14 @@ const closeModal = () => {
                         Cancel
                     </SecondaryButton>
 
-                    <OrangeButton
+                    <GreenButton
                         class="ms-3"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
-                        @click="transfer"
+                        @click="deposit"
                     >
-                        Transfer Value
-                    </OrangeButton>
+                        Deposit Value
+                    </GreenButton>
                 </div>
             </div>
         </Modal>

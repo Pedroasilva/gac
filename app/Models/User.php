@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the bank account associated with the user.
+     */
+    public function bankAccount()
+    {
+        return $this->hasOne(BankAccount::class);
+    }
 }

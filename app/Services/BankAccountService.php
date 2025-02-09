@@ -4,9 +4,19 @@ namespace App\Services;
 
 use App\Models\BankAccount;
 use App\Models\User;
+use App\Services\Contracts\BankAccountServiceInterface;
+use App\Services\Contracts\TransactionServiceInterface;
+use Illuminate\Support\Str;
 
-class BankAccountService
+class BankAccountService implements BankAccountServiceInterface
 {
+    protected $transactionService;
+
+    public function __construct(TransactionServiceInterface $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
+
     public function createAccount(User $user)
     {
         BankAccount::create([
@@ -24,24 +34,37 @@ class BankAccountService
         return md5(uniqid());
     }
 
-    public function deposit(BankAccount $account, $amount)
+    public function deposit(BankAccount $account, $amount, $isTransfer = false)
     {
         $account->balance += $amount;
         $account->income += $amount;
         $account->save();
+
+        if (!$isTransfer) {
+            $this->transactionService->deposit($account, $amount, 'Deposit', $this->generateTransactionGroup());
+        }
     }
 
-    public function withdraw(BankAccount $account, $amount)
+    public function withdraw(BankAccount $account, $amount, $isTransfer = false)
     {
         $account->balance -= $amount;
         $account->expenses += $amount;
         $account->save();
+
+        if (!$isTransfer) {
+            $this->transactionService->withdraw($account, $amount, 'Withdraw', $this->generateTransactionGroup());
+        }
     }
 
     public function transfer(BankAccount $source, BankAccount $destination, $amount)
     {
-        $this->withdraw($source, $amount);
-        $this->deposit($destination, $amount);
+        $transactionGroup = $this->generateTransactionGroup();
+
+        $this->withdraw($source, $amount, true);
+        $this->transactionService->withdraw($source, $amount, 'Transfer to ' . $destination->wallet_code, $transactionGroup);
+
+        $this->deposit($destination, $amount, true);
+        $this->transactionService->deposit($destination, $amount, 'Transfer from ' . $source->wallet_code, $transactionGroup);
     }
 
     public function getTransactionsHistoryPaginated(BankAccount $account, $perPage = 10)
@@ -52,5 +75,10 @@ class BankAccountService
     public function getTransactionsHistory(BankAccount $account)
     {
         return $account->transactionsHistory();
+    }
+
+    private function generateTransactionGroup()
+    {
+        return Str::uuid();
     }
 }

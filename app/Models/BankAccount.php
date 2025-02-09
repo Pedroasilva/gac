@@ -14,6 +14,7 @@ class BankAccount extends Model
         'income',
         'expenses',
         'account_type',
+        'wallet_code',
     ];
 
     public function user()

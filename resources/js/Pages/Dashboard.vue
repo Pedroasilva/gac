@@ -1,8 +1,18 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePoll } from '@inertiajs/vue3';
 import Transaction from '@/Components/Transaction.vue';
 import TransferForm from './Partials/TransferForm.vue';
+import DepositForm from './Partials/DepositForm.vue';
+
+usePoll(2000, {
+  onStart() {
+      console.log('Polling request started')
+  },
+  onFinish() {
+      console.log('Polling request finished')
+  }
+})
 
 defineProps({
     bankAccount: {
@@ -39,13 +49,8 @@ const formatCurrency = (value) => {
             </div>
 
             <div class="flex justify-center space-x-6 mb-8">
-
                 <TransferForm class="max-w-xl" />
-
-                <button class="bg-green-600 text-white px-6 py-3 rounded-lg transition duration-300">
-                    <i class="fa-solid fa-landmark"></i>
-                    Deposit
-                </button>
+                <DepositForm class="max-w-xl" />
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
@@ -62,7 +67,7 @@ const formatCurrency = (value) => {
             <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-4">Transactions</h2>
                 <Transaction v-for="transaction in bankAccount.transactions" :key="transaction.id"
-                    :date="transaction.created_at" :description="transaction.description" :amount="formatCurrency(transaction.amount)"
+                    :group="transaction.transaction_group" :date="transaction.created_at" :description="transaction.description" :amount="formatCurrency(transaction.amount)"
                     :type="transaction.transaction_type" />
             </div>
 

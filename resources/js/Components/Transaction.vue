@@ -6,6 +6,10 @@ export default {
             type: String,
             required: true
         },
+        group: {
+            type: String,
+            required: true
+        },
         description: {
             type: String,
             required: true
@@ -20,11 +24,11 @@ export default {
         }
     },
     methods: {
-        handleReceipt() {
-            // Handle receipt action
+        handleReceipt(group) {
+            console.log('Receipt for group:', group);
         },
-        handleReverse() {
-            // Handle reverse action
+        handleReverse(group) {
+            console.log('Reverse for group:', group);
         }
     }
 }
@@ -42,19 +46,15 @@ export default {
         </div>
         <div class="flex space-x-2">
             <button class="bg-blue-600 text-white text-sm px-2 py-1 rounded-lg hover:bg-blue-800 transition duration-300"
-                @click="handleReceipt">
+                @click="handleReceipt(group)">
                 <i class="fa-solid fa-receipt"></i>
                 Receipt
             </button>
             <button class="bg-red-600 text-white text-sm px-2 py-1 rounded-lg hover:bg-red-800 transition duration-300"
-                @click="handleReverse">
+                @click="handleReverse(group)">
                 <i class="fa-solid fa-rotate-left"></i>
                 Reverse
             </button>
         </div>
     </div>
 </template>
-
-<style scoped>
-/* Add any component-specific styles here */
-</style>

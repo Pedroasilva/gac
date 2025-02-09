@@ -11,6 +11,7 @@ class Transactions extends Model
         'transaction_type',
         'amount',
         'description',
+        'transaction_group',
     ];
 
     public $timestamps = false;
