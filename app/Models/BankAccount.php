@@ -27,14 +27,4 @@ class BankAccount extends Model
         return $this->hasMany(Transactions::class);
     }
 
-    public function transactionsHistory()
-    {
-        return $this->transactions()->orderBy('created_at', 'desc')->get();
-    }
-
-    public function transactionsHistoryPaginated($perPage = 10)
-    {
-        return $this->transactions()->orderBy('created_at', 'desc')->paginate($perPage);
-    }
-
 }

@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, usePoll } from '@inertiajs/vue3';
 import Transaction from '@/Components/Transaction.vue';
@@ -7,7 +8,7 @@ import DepositForm from './Partials/DepositForm.vue';
 
 usePoll(2000);
 
-defineProps({
+const props = defineProps({
     bankAccount: {
         type: Object,
         required: true,
@@ -20,13 +21,13 @@ const formatCurrency = (value) => {
         currency: 'USD',
     }).format(value);
 };
+
 </script>
 
 <template>
 
     <Head title="Account" />
     <AuthenticatedLayout>
-
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-2 mt-3">
             <div class="text-center">
                 <p class="text-base">
@@ -60,15 +61,19 @@ const formatCurrency = (value) => {
             <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-4">Transactions</h2>
                 <Transaction v-for="transaction in bankAccount.transactions" :key="transaction.id"
-                    :group="transaction.transaction_group" :date="transaction.created_at" :description="transaction.description" :amount="formatCurrency(transaction.amount)"
+                    :group="transaction.transaction_group" :date="transaction.created_at"
+                    :description="transaction.description" :amount="formatCurrency(transaction.amount)"
                     :type="transaction.transaction_type" />
             </div>
 
             <button v-if="bankAccount.transactions.length > 0"
-                class="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300">Load
-                more</button>
-            <p v-else class="text-center text-gray-500">No transactions found</p>
-        </div>
+                class="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
+                @click="loadMore">
+                Load more (TO DO)
+            </button>
 
+            <p v-else-if="bankAccount.transactions.length === 0" class="text-center text-gray-500">No transactions found
+            </p>
+        </div>
     </AuthenticatedLayout>
 </template>

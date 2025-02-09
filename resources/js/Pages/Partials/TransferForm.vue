@@ -49,6 +49,7 @@ const closeModal = () => {
 
         <Modal :show="confirmingTransfer" @close="closeModal">
             <div class="p-6">
+
                 <h2
                     class="text-lg font-medium text-gray-900"
                 >
