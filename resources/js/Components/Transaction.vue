@@ -26,12 +26,12 @@ export default {
             </p>
         </div>
         <div class="flex space-x-2">
-            <Receipt :group="transaction.transaction_group" />
-            <button class="bg-red-600 text-white text-sm px-2 py-1 rounded-lg hover:bg-red-800 transition duration-300"
-                @click="handleReverse(group)">
+            <button v-if="!transaction.reversed" class="bg-red-600 text-white text-sm px-2 py-1 rounded-lg hover:bg-red-800 transition duration-300"
+                @click="handleReverse(transaction.transaction_group)">
                 <i class="fa-solid fa-rotate-left"></i>
                 Reverse
             </button>
+            <Receipt :group="transaction.transaction_group" />
         </div>
     </div>
 </template>
