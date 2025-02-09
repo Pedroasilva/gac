@@ -87,7 +87,7 @@ class BankAccountService implements BankAccountServiceInterface
         return BankAccount::where('user_id', $user->id)
             ->with(['transactions' => function ($query) {
                 $query->orderBy('created_at', 'desc');
-                $query->limit(10);
+                $query->limit(15);
             }])
             ->first();
     }

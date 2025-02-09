@@ -66,13 +66,7 @@ const formatCurrency = (value) => {
                     :type="transaction.transaction_type" />
             </div>
 
-            <button v-if="bankAccount.transactions.length > 0"
-                class="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
-                @click="loadMore">
-                Load more (TO DO)
-            </button>
-
-            <p v-else-if="bankAccount.transactions.length === 0" class="text-center text-gray-500">No transactions found
+            <p v-if="bankAccount.transactions.length === 0" class="text-center text-gray-500">No transactions found
             </p>
         </div>
     </AuthenticatedLayout>
