@@ -16,7 +16,6 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'bankAccount' => $bankAccount,
-            'transactions' => $bankAccount ? $bankAccount->transactions : [],
         ]);
     }
 }
