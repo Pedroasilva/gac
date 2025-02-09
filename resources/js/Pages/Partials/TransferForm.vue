@@ -15,7 +15,7 @@ const form = useForm({
     password: '',
 });
 
-const confirmUserDeletion = () => {
+const confirmTransfer = () => {
     confirmingUserDeletion.value = true;
 
     nextTick(() => passwordInput.value.focus());
@@ -40,7 +40,7 @@ const closeModal = () => {
 
 <template>
     <section class="space-y-6">
-        <OrangeButton @click="confirmUserDeletion">
+        <OrangeButton @click="confirmTransfer">
             <i class="fa-solid fa-money-bill-transfer"></i>
             Transfer
         </OrangeButton>
@@ -54,45 +54,26 @@ const closeModal = () => {
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600">
-                    Please enter the account number, agency, and the amount you wish to transfer.
+                    Please enter the wallet code and the amount you wish to transfer.
                 </p>
 
                 <div class="mt-6">
                     <InputLabel
-                        for="agency"
-                        value="Agency"
-                        class="sr-only"
-                    />
-
-                    <TextInput
-                        id="agency"
-                        ref="agency_input"
-                        v-model="form.agency"
-                        type="number"
-                        class="mt-1 block w-3/4"
-                        placeholder="Agency"
-                    />
-
-                    <InputError :message="form.errors.agency" class="mt-2" />
-                </div>
-
-                <div class="mt-6">
-                    <InputLabel
                         for="value"
-                        value="Account Number"
+                        value="Wallet Code"
                         class="sr-only"
                     />
 
                     <TextInput
-                        id="account_number"
-                        ref="account_number_input"
-                        v-model="form.account_number"
-                        type="number"
+                        id="wallet_code"
+                        ref="wallet_code_input"
+                        v-model="form.wallet_code"
+                        type="text"
                         class="mt-1 block w-3/4"
-                        placeholder="Account Number"
+                        placeholder="Wallet Code"
                     />
 
-                    <InputError :message="form.errors.account_number" class="mt-2" />
+                    <InputError :message="form.errors.wallet_code" class="mt-2" />
                 </div>
 
                 <div class="mt-6">

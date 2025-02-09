@@ -12,7 +12,11 @@ class DashboardController extends Controller
     public function index(): Response
     {
         $user = Auth::user();
-        $bankAccount = BankAccount::where('user_id', $user->id)->with('transactions')->first();
+        $bankAccount = BankAccount::where('user_id', $user->id)
+            ->with(['transactions' => function ($query) {
+                $query->limit(10);
+            }])
+            ->first();
 
         return Inertia::render('Dashboard', [
             'bankAccount' => $bankAccount,

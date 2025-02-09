@@ -13,6 +13,8 @@ class Transactions extends Model
         'description',
     ];
 
+    public $timestamps = false;
+
     public function bankAccount()
     {
         return $this->belongsTo(BankAccount::class);

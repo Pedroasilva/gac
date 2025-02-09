@@ -11,32 +11,30 @@ class BankAccountService
     {
         BankAccount::create([
             'user_id' => $user->id,
-            'account_number' => $this->generateAccountNumber(),
-            'agency' => $this->generateAgencyNumber(),
+            'wallet_code' => $this->generateWalletCode(),
             'balance' => 0,
+            'income' => 0,
+            'expenses' => 0,
             'account_type' => 'wallet',
         ]);
     }
 
-    private function generateAgencyNumber()
+    private function generateWalletCode()
     {
-        return rand(1000, 9999);
-    }
-
-    private function generateAccountNumber()
-    {
-        return rand(1000000000, 9999999999);
+        return md5(uniqid());
     }
 
     public function deposit(BankAccount $account, $amount)
     {
         $account->balance += $amount;
+        $account->income += $amount;
         $account->save();
     }
 
     public function withdraw(BankAccount $account, $amount)
     {
         $account->balance -= $amount;
+        $account->expenses -= $amount;
         $account->save();
     }
 
@@ -44,5 +42,15 @@ class BankAccountService
     {
         $this->withdraw($source, $amount);
         $this->deposit($destination, $amount);
+    }
+
+    public function getTransactionsHistoryPaginated(BankAccount $account, $perPage = 10)
+    {
+        return $account->transactionsHistoryPaginated($perPage);
+    }
+
+    public function getTransactionsHistory(BankAccount $account)
+    {
+        return $account->transactionsHistory();
     }
 }

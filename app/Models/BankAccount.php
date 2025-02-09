@@ -11,6 +11,8 @@ class BankAccount extends Model
         'account_number',
         'agency',
         'balance',
+        'income',
+        'expenses',
         'account_type',
     ];
 

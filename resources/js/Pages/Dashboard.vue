@@ -11,6 +11,12 @@ defineProps({
     },
 });
 
+const formatCurrency = (value) => {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    }).format(value);
+};
 </script>
 
 <template>
@@ -21,16 +27,15 @@ defineProps({
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-2 mt-3">
             <div class="text-center">
                 <p class="text-base">
-                    Agency: {{ bankAccount.agency }}
-                    Account Number: {{ bankAccount.account_number }}
+                    Wallet Code: {{ bankAccount.wallet_code }}
                 </p>
             </div>
         </div>
 
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-3">
-            <div class="text-center mb-6">
+            <div class="text-center mb-4">
                 <h1 class="text-3xl font-bold">Total Balance</h1>
-                <p class="text-4xl text-green-600 font-semibold mt-2">$ {{ bankAccount.balance }}</p>
+                <p class="text-4xl text-green-600 font-semibold mt-2">{{ formatCurrency(bankAccount.balance) }}</p>
             </div>
 
             <div class="flex justify-center space-x-6 mb-8">
@@ -43,21 +48,21 @@ defineProps({
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 <div class="bg-gray-200 p-6 rounded-lg">
                     <h2 class="text-xl font-semibold">Income</h2>
-                    <p class="text-2xl text-green-600 mt-2">$ {{ bankAccount.income }}</p>
+                    <p class="text-2xl text-green-600 mt-2">{{ formatCurrency(bankAccount.income) }}</p>
                 </div>
                 <div class="bg-gray-200 p-6 rounded-lg">
                     <h2 class="text-xl font-semibold">Expenses</h2>
-                    <p class="text-2xl text-red-600 mt-2">$ {{ bankAccount.expenses }}</p>
+                    <p class="text-2xl text-red-600 mt-2">{{ formatCurrency(bankAccount.expenses) }}</p>
                 </div>
             </div>
 
-            <div class="mb-6">
+            <div class="mb-4">
                 <h2 class="text-xl font-semibold mb-4">Transactions</h2>
                 <Transaction v-for="transaction in bankAccount.transactions" :key="transaction.id"
-                    :date="transaction.created_at" :description="transaction.description" :amount="transaction.amount"
+                    :date="transaction.created_at" :description="transaction.description" :amount="formatCurrency(transaction.amount)"
                     :type="transaction.transaction_type" />
             </div>
 
