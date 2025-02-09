@@ -1,6 +1,11 @@
 <script>
+import Receipt from '@/Pages/Partials/Receipt.vue';
+
 export default {
     name: 'Transaction',
+    components: {
+        Receipt
+    },
     props: {
         date: {
             type: String,
@@ -25,6 +30,7 @@ export default {
     },
     methods: {
         handleReceipt(group) {
+
             console.log('Receipt for group:', group);
         },
         handleReverse(group) {
@@ -45,11 +51,12 @@ export default {
             </p>
         </div>
         <div class="flex space-x-2">
-            <button class="bg-blue-600 text-white text-sm px-2 py-1 rounded-lg hover:bg-blue-800 transition duration-300"
+            <Receipt :group="group" />
+            <!-- <button class="bg-blue-600 text-white text-sm px-2 py-1 rounded-lg hover:bg-blue-800 transition duration-300"
                 @click="handleReceipt(group)">
                 <i class="fa-solid fa-receipt"></i>
                 Receipt
-            </button>
+            </button> -->
             <button class="bg-red-600 text-white text-sm px-2 py-1 rounded-lg hover:bg-red-800 transition duration-300"
                 @click="handleReverse(group)">
                 <i class="fa-solid fa-rotate-left"></i>

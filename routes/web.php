@@ -19,6 +19,7 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/transfer', [DashboardController::class, 'transfer'])->name('transfer.make');
     Route::post('/deposit', [DashboardController::class, 'deposit'])->name('deposit.make');
+    Route::get('/receipt', [DashboardController::class, 'receipt'])->name('receipt.get');
 });
 
 Route::middleware('auth')->group(function () {

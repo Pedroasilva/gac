@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Transfer\DepositRequest;
+use App\Http\Requests\Transfer\ReceiptRequest;
 use App\Http\Requests\Transfer\TransferRequest;
 use App\Models\BankAccount;
 use App\Services\Contracts\BankAccountServiceInterface;
@@ -67,5 +68,18 @@ class DashboardController extends Controller
         $this->bankAccountService->deposit($bankAccount, $validated['amount']);
 
         return redirect()->back()->with('success', 'Deposit successful');
+    }
+
+    public function receipt(ReceiptRequest $request)
+    {
+        $validated = $request->validated();
+        $bankAccountId = Auth::user()->bankAccount->id;
+
+        $transactions = BankAccount::find($bankAccountId)
+            ->transactions()
+            ->where('transaction_group', $validated['group'])
+            ->get();
+
+        return response()->json($transactions);
     }
 }
