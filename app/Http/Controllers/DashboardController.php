@@ -6,7 +6,7 @@ use App\Http\Requests\Transfer\DepositRequest;
 use App\Http\Requests\Transfer\ReceiptRequest;
 use App\Http\Requests\Transfer\TransferRequest;
 use App\Models\BankAccount;
-use App\Services\Contracts\BankAccountServiceInterface;
+use App\Services\BankAccountService;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,7 +15,7 @@ class DashboardController extends Controller
 {
     protected $bankAccountService;
 
-    public function __construct(BankAccountServiceInterface $bankAccountService)
+    public function __construct(BankAccountService $bankAccountService)
     {
         $this->bankAccountService = $bankAccountService;
     }
@@ -23,12 +23,7 @@ class DashboardController extends Controller
     public function index(): Response
     {
         $user = Auth::user();
-        $bankAccount = BankAccount::where('user_id', $user->id)
-            ->with(['transactions' => function ($query) {
-                $query->orderBy('created_at', 'desc');
-                $query->limit(10);
-            }])
-            ->first();
+        $bankAccount = $this->bankAccountService->getBankAccountWithTransactions($user);
 
         return Inertia::render('Dashboard', [
             'bankAccount' => $bankAccount,
@@ -42,18 +37,6 @@ class DashboardController extends Controller
         $amount = $validated['amount'];
         $source = Auth::user()->bankAccount;
         $destination = BankAccount::where('wallet_code', $validated['wallet_destination'])->first();
-
-        if (!$destination) {
-            return redirect()->back()->withErrors(['wallet_destination' => 'The destination wallet does not exist']);
-        }
-
-        if ($source->wallet_code === $destination->wallet_code) {
-            return redirect()->back()->withErrors(['wallet_destination' => 'You cannot transfer to the same wallet']);
-        }
-
-        if ($source->balance < $amount) {
-            return redirect()->back()->withErrors(['amount' => 'Insufficient funds']);
-        }
 
         $this->bankAccountService->transfer($source, $destination, $amount);
 
@@ -75,9 +58,7 @@ class DashboardController extends Controller
         $validated = $request->validated();
         $bankAccount = Auth::user()->bankAccount;
 
-        $transactions = $bankAccount->transactions()
-            ->where('transaction_group', $validated['group'])
-            ->first();
+        $transactions = $this->bankAccountService->getTransactionsByGroup($bankAccount, $validated['group']);
 
         return response()->json([
             'bankAccount' => $bankAccount,

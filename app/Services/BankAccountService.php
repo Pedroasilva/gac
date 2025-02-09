@@ -81,4 +81,21 @@ class BankAccountService implements BankAccountServiceInterface
     {
         return Str::uuid();
     }
+
+    public function getBankAccountWithTransactions(User $user)
+    {
+        return BankAccount::where('user_id', $user->id)
+            ->with(['transactions' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+                $query->limit(10);
+            }])
+            ->first();
+    }
+
+    public function getTransactionsByGroup(BankAccount $bankAccount, $group)
+    {
+        return $bankAccount->transactions()
+            ->where('transaction_group', $group)
+            ->first();
+    }
 }
