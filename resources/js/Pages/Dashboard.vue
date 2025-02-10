@@ -6,7 +6,7 @@ import Transaction from '@/Components/Transaction.vue';
 import TransferForm from './Partials/TransferForm.vue';
 import DepositForm from './Partials/DepositForm.vue';
 
-usePoll(2000);
+// usePoll(2000);
 
 const props = defineProps({
     bankAccount: {
@@ -39,7 +39,7 @@ const formatCurrency = (value) => {
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-3">
             <div class="text-center mb-4">
                 <h1 class="text-3xl font-bold">Total Balance</h1>
-                <p class="text-4xl text-green-600 font-semibold mt-2">{{ formatCurrency(bankAccount.balance) }}</p>
+                <p :class="{'text-green-600': bankAccount.balance >= 0, 'text-red-600': bankAccount.balance < 0}" class="text-4xl font-semibold mt-2">{{ formatCurrency(bankAccount.balance) }}</p>
             </div>
 
             <div class="flex justify-center space-x-6 mb-8">

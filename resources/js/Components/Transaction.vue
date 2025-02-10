@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+import { router } from '@inertiajs/vue3'
 import Receipt from '@/Pages/Partials/Receipt.vue';
 
 export default {
@@ -15,9 +17,18 @@ export default {
     methods: {
         handleReverse(group) {
             axios.post('/transaction/reverse', { group })
+                .then(() => {
+                    router.reload();
+                })
                 .catch(error => {
                     console.error('Erro na requisição:', error);
                 });
+        },
+        formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            }).format(value);
         }
     }
 }
@@ -30,7 +41,7 @@ export default {
             <p class="text-xs text-gray-600">{{ transaction.created_at }}</p>
             <p :class="{ 'text-red-600': transaction.transaction_type === 'out', 'text-green-600': transaction.transaction_type === 'in', 'line-through': transaction.reversed }"
                 class="text-xl">
-                {{ transaction.amount }} -
+                {{ formatCurrency(transaction.amount) }} -
                 {{ transaction.description }}
             </p>
         </div>

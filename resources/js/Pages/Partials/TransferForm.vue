@@ -75,6 +75,7 @@ const closeModal = () => {
                         class="mt-1 block w-3/4"
                         placeholder="Wallet Code"
                         required
+                        @keyup.enter="transfer"
                     />
 
                     <InputError :message="form.errors.wallet_destination" class="mt-2" />
@@ -95,6 +96,7 @@ const closeModal = () => {
                         class="mt-1 block w-3/4"
                         placeholder="Amount"
                         required
+                        @keyup.enter="transfer"
                     />
 
                     <InputError :message="form.errors.amount" class="mt-2" />
