@@ -13,6 +13,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    databaseTimestamp: {
+        type: Number,
+        required: true,
+    },
 });
 
 const formatCurrency = (value) => {
