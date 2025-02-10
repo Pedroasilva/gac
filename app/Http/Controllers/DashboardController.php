@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Transfer\DepositRequest;
 use App\Http\Requests\Transfer\ReceiptRequest;
+use App\Http\Requests\Transfer\ReverseTransactionReverse;
 use App\Http\Requests\Transfer\TransferRequest;
 use App\Models\BankAccount;
 use App\Services\BankAccountService;
+use App\Services\TransactionService;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,10 +16,12 @@ use Inertia\Response;
 class DashboardController extends Controller
 {
     protected $bankAccountService;
+    protected $transactionService;
 
-    public function __construct(BankAccountService $bankAccountService)
+    public function __construct(BankAccountService $bankAccountService, TransactionService $transactionService)
     {
         $this->bankAccountService = $bankAccountService;
+        $this->transactionService = $transactionService;
     }
 
     public function index(): Response
@@ -58,11 +62,21 @@ class DashboardController extends Controller
         $validated = $request->validated();
         $bankAccount = Auth::user()->bankAccount;
 
-        $transactions = $this->bankAccountService->getTransactionsByGroup($bankAccount, $validated['group']);
+        $transactions = $this->bankAccountService->getTransactionByGroup($bankAccount, $validated['group']);
 
         return response()->json([
             'bankAccount' => $bankAccount,
             'transactions' => $transactions,
         ]);
+    }
+
+    public function reverse(ReverseTransactionReverse $request)
+    {
+        $validated = $request->validated();
+        $transactions = $this->transactionService->getTransactionsByGroup($validated['group']);
+
+        $this->bankAccountService->reverse($transactions);
+
+        return redirect()->back()->with('success', 'Transaction reversed');
     }
 }

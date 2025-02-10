@@ -92,10 +92,29 @@ class BankAccountService implements BankAccountServiceInterface
             ->first();
     }
 
-    public function getTransactionsByGroup(BankAccount $bankAccount, $group)
+    public function getTransactionByGroup(BankAccount $bankAccount, $group)
     {
         return $bankAccount->transactions()
             ->where('transaction_group', $group)
             ->first();
     }
+
+    public function reverse($transactions)
+    {
+        foreach ($transactions as $transaction) {
+            $account = $transaction->bankAccount;
+            if ($transaction->transaction_type == 'in') {
+                $account->balance -= $transaction->amount;
+                $account->income -= $transaction->amount;
+            }else if ($transaction->transaction_type == 'out') {
+                $account->balance += $transaction->amount;
+                $account->expenses -= $transaction->amount;
+            }
+            $account->save();
+
+            $transaction->reversed = true;
+            $transaction->save();
+        }
+    }
+
 }

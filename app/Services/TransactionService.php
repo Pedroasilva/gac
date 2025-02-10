@@ -35,4 +35,9 @@ class TransactionService implements TransactionServiceInterface
         $this->withdraw($source, $amount, $description, $transactionGroup);
         $this->deposit($destination, $amount, $description, $transactionGroup);
     }
+
+    public function getTransactionsByGroup($group)
+    {
+        return Transactions::where('transaction_group', $group)->get();
+    }
 }

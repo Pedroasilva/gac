@@ -20,6 +20,7 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::post('/transfer', [DashboardController::class, 'transfer'])->name('transfer.make');
     Route::post('/deposit', [DashboardController::class, 'deposit'])->name('deposit.make');
     Route::get('/receipt', [DashboardController::class, 'receipt'])->name('receipt.get');
+    Route::post('/transaction/reverse', [DashboardController::class, 'reverse'])->name('transaction.reverse');
 });
 
 Route::middleware('auth')->group(function () {

@@ -54,9 +54,11 @@ const closeModal = () => {
         <Modal :show="showReceipt" @close="closeModal">
             <div class="bg-gray-100 p-6 relative">
                 <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6" v-if="response">
+
                     <div class="text-center mb-6">
                         <h1 class="text-2xl font-bold">Receipt</h1>
-                        <p class="text-sm text-gray-500">Transaction ID: #{{ response.transactions.transaction_group }}</p>
+                        <p class="text-sm text-gray-500">Transaction ID: #{{ response.transactions.transaction_group }}
+                        </p>
                         <p class="text-sm text-gray-500">Date: {{ response.transactions.created_at }}</p>
                     </div>
 
@@ -74,22 +76,26 @@ const closeModal = () => {
                         </div>
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <h2 class="text-lg font-semibold">Type</h2>
-                            <p class="text-xl">{{ response.transactions.transaction_type === 'in' ? 'Income' : 'Expense' }}</p>
+                            <p class="text-xl">{{ response.transactions.transaction_type === 'in' ? 'Income' : 'Expense'
+                                }}</p>
                         </div>
                     </div>
 
-                    <div>
+                    <div class="mb-6">
                         <h2 class="text-lg font-semibold mb-2">Description</h2>
                         <div class="bg-gray-200 p-4 rounded-lg">
                             <p class="text-lg">{{ response.transactions.description }}</p>
                         </div>
                     </div>
+
+                    <div v-if="response && response.transactions.reversed"
+                        class="inset-0 flex items-center justify-center pointer-events-none">
+                        <p class="text-2xl text-red-500 opacity-50">REVERSED AT {{ response.transactions.updated_at }}
+                        </p>
+                    </div>
                 </div>
                 <div v-else class="text-center">
                     <p class="text-sm text-gray-500">Loading...</p>
-                </div>
-                <div v-if="response && response.transactions.reversed" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <p class="text-6xl text-red-500 opacity-50 transform rotate-45">REVERSED</p>
                 </div>
                 <div class="flex justify-center mt-6">
                     <SecondaryButton @click="closeModal">
